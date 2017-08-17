@@ -11,19 +11,61 @@ function groupBy(items, properties, collect) {
 }
 
 function _groupBy(items, properties) {
-  var group = {};
- 	    if (typeof properties[0] === 'string') {
- 	      group = groupByCategory(items, properties[0]);
- 	    } else {
- 	      group = groupByRange(items, properties[0]);
- 	    }
-      properties = properties.slice(1);
+    var group = {};
+
+    if (typeof properties[0] === 'string') {
+      //groupBy category
+      group = _groupBy(result, function(item) {
+         return valueAt(items, properties[0]);
+      });
+        properties[0]);
+    } else {
+      //groupBy range
+      group = groupByRange(items, properties[0]);
+    }
+
+    // Nested array
+    properties = properties.slice(1);
+
     if (properties.length > 0) {
       for (var key in group) {
         group[key] = _groupBy(group[key], properties);
       }
     }
     return group;
+}
+
+/*
+* items (Array): The collection to iterate over.
+* iteratee (Function): The iteratee to find tags.
+*
+* Inspired from _.groupBy
+*/
+function __groupBy(items, iteratee) {
+  // Grouping by is equivalent to redicing an array
+  // and accumulating them by category
+  return items.reduce(function(group, item){
+    // We provided a function that tels us in wich category
+    // a given item is
+    var tags = iteratee(item)
+
+    if (Array.isArray(tags) {
+      // tag is string/integer
+      add2tag(group,tags,item)
+    }else{
+      // tag is an 1d-array
+      tags.forEach(function(tag) {
+        add2tag(group,tag,item)
+      })})
+    }
+
+    return group
+  },{})
+}
+
+function add2tag(group,tag,item){
+  group[tag] = group[tag] || [];
+  group[tag].push(item);
 }
 
 function groupByCategory(arr, prop) {
