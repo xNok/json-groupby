@@ -8,8 +8,8 @@ function groupBy(items, properties, collect) {
 
   if (typeof properties[0] === 'string') {
     //groupBy category
-    group = _groupBy(result, function(item) {
-       return valueAt(items, properties[0]);
+    group = _groupBy(items, function(item) {
+       return valueAt(item, properties[0]);
     });
   } else {
     //groupBy range
@@ -17,13 +17,13 @@ function groupBy(items, properties, collect) {
   }
 
   // Nested array
-  properties = properties.slice(1);
-
-  if (properties.length > 0) {
-    for (var key in group) {
-      group[key] = _groupBy(group[key], properties);
-    }
-  }
+  // properties = properties.slice(1);
+  //
+  // if (properties.length > 0) {
+  //   for (var key in group) {
+  //     group[key] = _groupBy(group[key], properties);
+  //   }
+  // }
 
   // collect other properties values in array
   if (collect && collect.length > 0)
@@ -46,7 +46,7 @@ function _groupBy(items, iteratee) {
     // a given item is
     var tags = iteratee(item)
 
-    if (Array.isArray(tags)) {
+    if (!Array.isArray(tags)) {
       // tag is string/integer
       add2tag(group,tags,item)
     }else{
