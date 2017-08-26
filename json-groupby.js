@@ -1,35 +1,42 @@
 'use strict';
 
-function groupBy(items, properties, collect) {
+/**
+* Main Function
+*/
+function groupBy(items, properties, collect){
   if (arguments.length < 2) return arr;
 
-  //groupBy recursive funtion
-  var group = {};
+  var group = {}
 
   if (typeof properties[0] === 'string') {
     //groupBy category
-    group = _groupBy(items, function(item) {
+    group = groupByCategory(items, function(item) {
        return valueAt(item, properties[0]);
     });
   } else {
     //groupBy range
     group = groupByRange(items, properties[0]);
-  }
+  }  // collect other properties values in array
 
   // Nested array
-  // properties = properties.slice(1);
-  //
-  // if (properties.length > 0) {
-  //   for (var key in group) {
-  //     group[key] = _groupBy(group[key], properties);
-  //   }
-  // }
+  properties = properties.slice(1);
+
+  if (properties.length > 0) {
+    for (var key in group) {
+      group[key] = groupBy(group[key], properties);
+    }
+  }
 
   // collect other properties values in array
   if (collect && collect.length > 0)
     group = collectProperties(group, collect);
 
-  return group;
+  return group
+}
+
+function add2tag(group,tag,item){
+  group[tag] = group[tag] || [];
+  group[tag].push(item);
 }
 
 /*
@@ -38,7 +45,7 @@ function groupBy(items, properties, collect) {
 *
 * Inspired from _.groupBy
 */
-function _groupBy(items, iteratee) {
+function groupByCategory(items, iteratee) {
   // Grouping by is equivalent to redicing an array
   // and accumulating them by category
   return items.reduce(function(group, item){
@@ -58,32 +65,6 @@ function _groupBy(items, iteratee) {
 
     return group
   },{})
-}
-
-function add2tag(group,tag,item){
-  group[tag] = group[tag] || [];
-  group[tag].push(item);
-}
-
-function groupByCategory(arr, prop) {
-  var isPropertyArray = Array.isArray(valueAt(arr[0], prop));
-  if (isPropertyArray) {
-    return arr.reduce(function(group, f) {
-      var tags = valueAt(f, prop);
-      tags.forEach(function(tag) {
-        group[tag] = group[tag] || [];
-        group[tag].push(f);
-      });
-      return group;
-    },{});
-  } else {
-    return arr.reduce(function(group, f) {
-      var tag = valueAt(f, prop);
-      group[tag] = group[tag] || [];
-      group[tag].push(f);
-      return group;
-    },{});
-  }
 }
 
 function groupByRange(arr, lookup) {
