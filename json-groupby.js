@@ -34,7 +34,7 @@ function groupBy(items, properties, collect){
   return group
 }
 
-function add2tag(group,tag,item){
+function add2tag(group,tag,item) {
   group[tag] = group[tag] || [];
   group[tag].push(item);
 }
@@ -101,8 +101,8 @@ function collectProperties(groups, properties) {
   return collection;
 }
 
+//taken from http://stackoverflow.com/a/6394168/713573
 function valueAt(obj,path) {
-  //taken from http://stackoverflow.com/a/6394168/713573
   function index(prev,cur, i, arr) {
     if (prev.hasOwnProperty(cur)) {
       return prev[cur];
@@ -126,4 +126,7 @@ function locationOf(element, array, start, end) {
     return locationOf(element, array, start, pivot);
   }
 }
+
 module.exports = groupBy;
+module.exports.groupByCategory = groupByCategory;
+module.exports.groupByRange = groupByRange;

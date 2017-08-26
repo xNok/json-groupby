@@ -34,3 +34,5 @@ products =
     "vendor": {"name": "Rosalie Erickson", "address": {"city": "New York"}}}];
 
 console.log(groupBy(products, ['color']))
+
+groupByCategory = require('./json-groupby.js').groupByCategory
